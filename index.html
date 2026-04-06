@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>El Carmen · Wall Paintings · Valencia</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,800;1,300&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#0e0e0e;--white:#f2ede4;--red:#d03a1e;--yellow:#e8b94a;--blue:#2c5f8a;--grey:#8a8278;--pale:#e8e2d6}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{background:var(--black);color:var(--white);font-family:'Courier Prime',monospace;font-size:14px;line-height:1.6}
+  .sticky-nav{position:sticky;top:0;z-index:200;background:var(--black);border-bottom:2px solid var(--red);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+  .sticky-nav span{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--yellow)}
+  .progress-bar{position:absolute;bottom:-2px;left:0;height:2px;background:var(--yellow);width:0%;transition:width .1s linear}
+  .hero{background:var(--black);padding:52px 20px 40px;border-bottom:1px solid #222;position:relative;overflow:hidden}
+  .hero-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--red);margin-bottom:14px}
+  .hero h1{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(58px,18vw,110px);line-height:.88;text-transform:uppercase;letter-spacing:-1px;color:var(--white)}
+  .hero h1 em{font-style:normal;color:var(--yellow);display:block}
+  .hero-desc{margin-top:20px;font-size:12px;color:var(--grey);line-height:1.8;max-width:440px}
+  .hero-stats{display:flex;gap:0;margin-top:28px;border:1px solid #333}
+  .stat{flex:1;padding:12px 10px;border-right:1px solid #333;text-align:center}
+  .stat:last-child{border-right:none}
+  .stat-num{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;color:var(--yellow);display:block;line-height:1}
+  .stat-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--grey);margin-top:3px;display:block}
+  .walk-intro{background:var(--red);padding:22px 20px;font-size:12px;line-height:1.85;color:rgba(242,237,228,.92);border-bottom:3px solid var(--black)}
+  .walk-intro strong{color:var(--white);font-weight:700}
+  .disclaimer{background:#111;border-left:3px solid var(--grey);padding:14px 20px;font-size:10px;color:var(--grey);line-height:1.7}
+  .mural{border-bottom:1px solid #1e1e1e;background:var(--black);opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+  .mural.in{opacity:1;transform:translateY(0)}
+  .mural-bar{height:3px;width:100%}
+  .mural-header{padding:20px 20px 0;display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:start}
+  .mural-num{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:56px;line-height:1;color:#1e1e1e;text-align:right;padding-top:2px}
+  .mural-tag{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--grey);margin-bottom:4px}
+  .mural-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px;line-height:1;text-transform:uppercase;color:var(--white)}
+  .mural-artist{font-family:'Barlow Condensed',sans-serif;font-weight:300;font-style:italic;font-size:16px;color:var(--yellow);margin-top:2px}
+  .mural-loc{display:inline-flex;align-items:center;gap:6px;margin:10px 0 0 64px;background:#1a1a1a;border:1px solid #2e2e2e;padding:5px 12px;font-size:10px;letter-spacing:1px;color:var(--grey);text-decoration:none}
+  .mural-loc:active{color:var(--yellow);border-color:var(--yellow)}
+  .loc-dot{width:6px;height:6px;background:var(--red);border-radius:50%;flex-shrink:0}
+  .mural-image-wrap{position:relative;margin-top:16px;background:#111}
+  .mural-image-wrap img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;opacity:.9}
+  .mural-illustration{width:100%;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
+  .mural-caption{position:absolute;bottom:0;left:0;right:0;padding:10px 14px;background:linear-gradient(transparent,rgba(14,14,14,.92));font-size:10px;color:rgba(242,237,228,.6);letter-spacing:1px}
+  .mural-body{padding:16px 20px 20px 64px}
+  .what-you-see{background:#141414;border-left:3px solid var(--yellow);padding:12px 14px;margin-bottom:14px}
+  .what-you-see strong{display:block;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--yellow);margin-bottom:6px}
+  .what-you-see p{font-size:12px;line-height:1.7;color:rgba(242,237,228,.85)}
+  .mural-meaning{font-size:12px;line-height:1.85;color:#aaa}
+  .mural-meaning em{color:var(--white);font-style:italic}
+  .mural-meaning strong{color:var(--white)}
+  .year-badge{display:inline-block;background:#1a1a1a;border:1px solid #333;font-size:9px;letter-spacing:2px;padding:3px 8px;color:var(--grey);margin-bottom:10px}
+  .walk-dir{background:#0a0a0a;border-top:1px solid #1e1e1e;border-bottom:1px solid #1e1e1e;padding:14px 20px;display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;opacity:0;transition:opacity .4s ease .2s}
+  .walk-dir.in{opacity:1}
+  .dir-arrow{font-size:22px;color:var(--red);line-height:1}
+  .dir-text{font-size:11px;color:#666;line-height:1.55}
+  .dir-text strong{color:#999}
+  .dir-dist{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:20px;color:#333;text-align:right}
+  .c-red{background:var(--red)}.c-yellow{background:var(--yellow)}.c-blue{background:var(--blue)}.c-grey{background:var(--grey)}.c-white{background:#ccc}.c-green{background:#4a8a5c}.c-orange{background:#d06020}.c-purple{background:#6b4a9a}
+  .ill-moses{background:linear-gradient(180deg,#1a1a2e 0%,#2d1b12 100%)}
+  .ill-cars{background:linear-gradient(180deg,#e8e0d0 0%,#c8c0b0 100%)}
+  .ill-paella{background:linear-gradient(180deg,#2a1a0a 0%,#1a0a00 100%)}
+  .ill-ivam{background:linear-gradient(180deg,#e8e4dc 0%,#d8d4cc 100%)}
+  .ill-generic{background:linear-gradient(135deg,#111 0%,#1a1a1a 100%)}
+  .ill-icon{font-size:72px;line-height:1;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(255,255,255,.1))}
+  .ill-label{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);text-align:center}
+  .tip{margin-top:14px;display:flex;gap:10px;align-items:flex-start}
+  .tip-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+  .tip-text{font-size:11px;color:var(--grey);line-height:1.6;font-style:italic}
+  .artists{background:#080808;padding:32px 20px;border-top:2px solid var(--red)}
+  .artists h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:36px;text-transform:uppercase;letter-spacing:1px;color:var(--white);margin-bottom:6px}
+  .artists-sub{font-size:11px;color:var(--grey);margin-bottom:24px;line-height:1.6}
+  .artist{border-top:1px solid #1a1a1a;padding:16px 0;display:grid;grid-template-columns:4px 1fr;gap:14px}
+  .artist-stripe{border-radius:2px}
+  .a-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.5px;color:var(--white);line-height:1}
+  .a-origin{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);margin:3px 0 8px}
+  .a-bio{font-size:11px;color:var(--grey);line-height:1.7}
+  .practical{background:var(--black);padding:28px 20px;border-top:1px solid #1e1e1e}
+  .practical h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase;color:var(--white);margin-bottom:16px}
+  .prac-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .prac-item{background:#0e0e0e;border:1px solid #1e1e1e;padding:12px}
+  .prac-item dt{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:5px}
+  .prac-item dd{font-size:11px;color:#888;line-height:1.6;list-style:none}
+  footer{background:#050505;padding:24px 20px;text-align:center;font-size:10px;letter-spacing:1.5px;color:#333;text-transform:uppercase;border-top:1px solid #111;line-height:2}
+  footer strong{color:var(--yellow)}
+</style>
+</head>
+<body>
+
+<nav class="sticky-nav">
+  <span>El Carmen · Wall Paintings</span>
+  <span style="color:var(--grey);font-size:11px;letter-spacing:1px;">Valencia</span>
+  <div class="progress-bar" id="prog"></div>
+</nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">&#9679; Walking Guide · Wall Paintings · El Carmen</div>
+  <h1>The<em>Walls</em>of El Carmen</h1>
+  <p class="hero-desc">A mural-by-mural tour of El Carmen's most significant wall paintings — what each one shows, what it means, and exactly where to find it.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">10</span><span class="stat-label">Murals</span></div>
+    <div class="stat"><span class="stat-num">1.8</span><span class="stat-label">km</span></div>
+    <div class="stat"><span class="stat-num">2h</span><span class="stat-label">Allow</span></div>
+    <div class="stat"><span class="stat-num">Free</span><span class="stat-label">Entry</span></div>
+  </div>
+</header>
+
+<section class="walk-intro">
+  <p>Start at <strong>Plaza del Tossal</strong>. The route loops through the core of El Carmen, ending near the Torres de Serranos. Walk in order, or cherry-pick by mural — each card tells you what to look for on the wall, not just which street to find it on.</p>
+</section>
+
+<div class="disclaimer">&#9888; Street art is ephemeral. Major works documented here have stood for years, but murals can change overnight. Expect the unexpected — and check every corner you weren't planning to.</div>
+
+
+<!-- MURAL 01 — BLU: DIVINE MOSES -->
+<article class="mural">
+  <div class="mural-bar c-red"></div>
+  <div class="mural-header">
+    <div class="mural-num">01</div>
+    <div class="mural-info">
+      <div class="mural-tag">Plaza del Tossal · Start here · Right wall (east side)</div>
+      <div class="mural-title">Divine Moses</div>
+      <div class="mural-artist">Blu · Italian · 2011</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=Plaza+del+Tossal+Valencia" target="_blank"><span class="loc-dot"></span>Plaza del Tossal, El Carmen — right wall facing the square</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration ill-moses"><div class="ill-icon">🐍</div><div class="ill-label">Moses · Blu · Plaza del Tossal · 2011</div></div>
+    <div class="mural-caption">Right (east) wall of Plaza del Tossal</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">Painted 2011 · One of the most photographed walls in Spain</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>A full building-height robed figure of Moses. His beard does not end in hair — it dissolves into a writhing mass of snakes. In each hand he holds a stone tablet. Instead of the Ten Commandments, the tablets bear a <strong>dollar sign</strong> and a <strong>euro sign</strong>.</p>
+    </div>
+    <p class="mural-meaning">
+      <strong>Blu</strong> is one of the world's most significant muralists. This is his most famous work in Spain. Moses — the lawgiver — is recast as a servant of money. The snakes replace divine wisdom with venomous authority. <em>It was painted during the European debt crisis of 2011. That context is inseparable from the image.</em>
+    </p>
+    <div class="tip"><span class="tip-icon">📸</span><span class="tip-text">Cross to the café terrace on the opposite side of the square — the only angle where both this mural and Escif's falling cars fit in a single frame. Morning light hits this wall from the east before noon.</span></div>
+  </div>
+</article>
+
+<div class="walk-dir">
+  <span class="dir-arrow">→</span>
+  <div class="dir-text">Stay in <strong>Plaza del Tossal</strong>. The next mural is on the adjacent wall — turn left, same square.</div>
+  <div class="dir-dist">10m</div>
+</div>
+
+
+<!-- MURAL 02 — ESCIF: FALLING CARS -->
+<article class="mural">
+  <div class="mural-bar c-grey"></div>
+  <div class="mural-header">
+    <div class="mural-num">02</div>
+    <div class="mural-info">
+      <div class="mural-tag">Plaza del Tossal · Left wall (west side)</div>
+      <div class="mural-title">Falling Cars</div>
+      <div class="mural-artist">Escif · Valencian · 2011</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=Plaza+del+Tossal+Valencia" target="_blank"><span class="loc-dot"></span>Plaza del Tossal, El Carmen — left wall facing the square</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration ill-cars"><div class="ill-icon" style="font-size:64px;">🚗</div><div class="ill-label" style="color:#333;">Falling Cars · Escif · 2011</div></div>
+    <div class="mural-caption">Left (west) wall of Plaza del Tossal — same square as Moses</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">Painted 2011 · Still standing</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>Multiple ordinary cars cascade down the building facade as if they drove off the roof. The palette is near-monochrome — greys, off-whites, muted ochre. The cars look perfectly normal. They are just falling. There is no crash. No drama. Just the fall, frozen.</p>
+    </div>
+    <p class="mural-meaning">
+      <strong>Escif</strong> is Valencia's most celebrated urban artist — anonymous by choice. His signature is deadpan surrealism: recognisable objects removed from logic. Consumer aspirations — cars, status, progress — simply falling, pointless, defying sense. <em>The stillness is what unsettles. He never explains his work. He leaves that entirely to you.</em>
+    </p>
+    <div class="tip"><span class="tip-icon">👁</span><span class="tip-text">Stand well back from the square before approaching. These are 4–5 storey walls. You need distance to read them as full compositions.</span></div>
+  </div>
+</article>
+
+<div class="walk-dir">
+  <span class="dir-arrow">→</span>
+  <div class="dir-text">Walk east along <strong>Carrer de Cavallers</strong> past Plaza de Sant Jaume. Turn right (south) into <strong>Carrer Baja</strong>.</div>
+  <div class="dir-dist">280m</div>
+</div>
+
+
+<!-- MURAL 03 — ERICAILCANE: RABBIT & CHICKEN -->
+<article class="mural">
+  <div class="mural-bar c-orange"></div>
+  <div class="mural-header">
+    <div class="mural-num">03</div>
+    <div class="mural-info">
+      <div class="mural-tag">Carrer Baja · Corner building · Two faces</div>
+      <div class="mural-title">Rabbit &amp; Chicken</div>
+      <div class="mural-artist">Ericailcane · Italian</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=Carrer+Baix+Valencia+El+Carmen" target="_blank"><span class="loc-dot"></span>Carrer Baix (Calle Baja), El Carmen — corner building, walk both sides</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration ill-paella"><div class="ill-icon">🐰</div><div class="ill-label">Rabbit &amp; Chicken · Ericailcane · Calle Baja</div></div>
+    <div class="mural-caption">Two opposite faces of the same corner building on Carrer Baja</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">Carrer Baja · El Carmen · Documented</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>A giant rabbit has its hands around the throat of a large chicken. Below them: a paella pan. In the background, a crowd of grey, faceless people watches without moving. The two animals are on <strong>opposite sides of the same corner building</strong> — walk around to see both.</p>
+    </div>
+    <p class="mural-meaning">
+      <strong>Ericailcane</strong> (Bologna, Italy) is known internationally for anthropomorphic animals in confrontation. The subject here is painfully local: traditional <em>paella valenciana</em> uses rabbit and chicken — not seafood. The mural stages a gladiatorial fight to decide which ingredient earns its place in the dish. The grey crowd watching passively amplifies the absurdity. <em>Deadpan comedy about a matter of genuine local seriousness.</em>
+    </p>
+    <div class="tip"><span class="tip-icon">🔄</span><span class="tip-text">You must walk around the corner to see the companion piece on the other face. The two sides form one complete narrative — don't miss it.</span></div>
+  </div>
+</article>
+
+<div class="walk-dir">
+  <span class="dir-arrow">→</span>
+  <div class="dir-text">Continue along <strong>Carrer Baja</strong> toward number 29. Look right at the wall.</div>
+  <div class="dir-dist">50m</div>
+</div>
+
+
+<!-- MURAL 04 — XEMAYO: PORTRAIT -->
+<article class="mural">
+  <div class="mural-bar c-blue"></div>
+  <div class="mural-header">
+    <div class="mural-num">04</div>
+    <div class="mural-info">
+      <div class="mural-tag">Carrer Baja, No. 29</div>
+      <div class="mural-title">Portrait</div>
+      <div class="mural-artist">Xemayo · Valencian</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=Calle+Baja+29+Valencia" target="_blank"><span class="loc-dot"></span>Carrer Baja No. 29, El Carmen — right-hand wall</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration ill-generic"><div class="ill-icon">🎭</div><div class="ill-label">Portrait · Xemayo · Calle Baja 29</div></div>
+    <div class="mural-caption">Wall at Carrer Baja No. 29</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">Carrer Baja No. 29 · Documented</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>A large-format figurative portrait. Xemayo uses strong outlines and concentrated detail on the face, with flatter handling elsewhere. The subject is anonymous — no name, no caption. The face commands the wall without explaining itself.</p>
+    </div>
+    <p class="mural-meaning">
+      <strong>Xemayo</strong> is a Valencian street portraitist. In a neighbourhood saturated with political murals and surreal commentary, a portrait that simply <em>is</em> — no message, no symbol — stands as its own kind of refusal. The face asks only to be looked at.
+    </p>
+    <div class="tip"><span class="tip-icon">🔍</span><span class="tip-text">Calle Baja is one of the richest single streets in El Carmen. Walk the full length slowly, both sides, checking every wall section, gate, and door.</span></div>
+  </div>
+</article>
+
+<div class="walk-dir">
+  <span class="dir-arrow">→</span>
+  <div class="dir-text">Head north on <strong>Carrer de la Corona</strong> checking walls and shutters. Continue to the junction with <strong>Carrer de la Beneficència</strong>, then turn onto <strong>Carrer Moro Zaid</strong>.</div>
+  <div class="dir-dist">300m</div>
+</div>
+
+
+<!-- MURAL 05 — JULIETA XLF: GIRL WITH CATS -->
+<article class="mural">
+  <div class="mural-bar c-yellow"></div>
+  <div class="mural-header">
+    <div class="mural-num">05</div>
+    <div class="mural-info">
+      <div class="mural-tag">Carrer Moro Zaid · Facing the old car park</div>
+      <div class="mural-title">Girl with Cats &amp; Flowers</div>
+      <div class="mural-artist">Julieta XLF · Spanish · XLF Crew</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=Calle+Moro+Zaid+Valencia" target="_blank"><span class="loc-dot"></span>Carrer Moro Zaid, El Carmen — wall facing the old car park</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration" style="background:linear-gradient(180deg,#1a2a1a 0%,#0a1a0a 100%)"><div class="ill-icon">🌸</div><div class="ill-label">Girl with Cats · Julieta XLF · Calle Moro Zaid</div></div>
+    <div class="mural-caption">Carrer Moro Zaid, facing the old car park</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">El Carmen · Julieta XLF · Documented</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>A tall, elongated female figure surrounded by cats and botanical forms — flowers, leaves, organic shapes in muted dusty pinks, sage greens, and cream. The cats press close to the figure. Everything is in Julieta's characteristic fluid line: soft but precise.</p>
+    </div>
+    <p class="mural-meaning">
+      <strong>Julieta XLF</strong> is part of the XLF collective and Valencia's most prolific female muralist. Her figures are almost always women — in solitude, in relationship with nature or animals rather than other people. <em>There is a stillness in her work that persists against the noise of the city around it.</em> She has documented murals across Calle Baja, Calle de la Beneficència, Calle Ripalda, Calle Doctor Chiarri, and Calle Roteros.
+    </p>
+    <div class="tip"><span class="tip-icon">📍</span><span class="tip-text">Once you recognise her style — those elongated proportions, soft palettes, botanical backgrounds — you will spot her work on multiple other walls as you continue the route.</span></div>
+  </div>
+</article>
+
+<div class="walk-dir">
+  <span class="dir-arrow">→</span>
+  <div class="dir-text">Walk west along <strong>Carrer de la Beneficència</strong> toward the back of the IVAM museum. The mural runs the full length of the park wall behind the building.</div>
+  <div class="dir-dist">350m</div>
+</div>
+
+
+<!-- MURAL 06 — ESCIF: IVAM WALL -->
+<article class="mural">
+  <div class="mural-bar c-white"></div>
+  <div class="mural-header">
+    <div class="mural-num">06</div>
+    <div class="mural-info">
+      <div class="mural-tag">Behind IVAM Modern Art Museum · Carrer de la Beneficència</div>
+      <div class="mural-title">IVAM Wall</div>
+      <div class="mural-artist">Escif · Valencian · Institutional commission</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=IVAM+Institut+Valencia+Art+Modern" target="_blank"><span class="loc-dot"></span>Rear wall of IVAM, Carrer de Guillem de Castro / Carrer de la Beneficència</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration ill-ivam"><div class="ill-icon" style="font-size:64px;">🏛️</div><div class="ill-label" style="color:#333;">IVAM Wall · Escif · Institutional Commission</div></div>
+    <div class="mural-caption">The entire rear facade of the IVAM — Valencia's foremost modern art museum — painted by Escif</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">IVAM commission · Escif · Valencia's largest institutional mural</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>The <strong>entire back wall of the IVAM</strong> painted as a single composition. Classical Roman busts sit alongside what look like ordinary graffiti tags from the neighbourhood. One section shows a white unicorn with the hand-painted phrase <em>"Fuera droga del barrio"</em> (Get drugs out of the neighbourhood), painted in 2017. The scale requires distance — stand back in the park to read it fully.</p>
+    </div>
+    <p class="mural-meaning">
+      The IVAM commissioned Escif — a remarkable institutional act. He responded by painting the museum with the <em>actual language of the streets around it</em>: the graffiti tags visible in the mural are real messages Escif collected from Carmen's walls and transposed onto the museum's surface. Classical art and street scrawl share the same canvas. <strong>The museum becomes the street. The street becomes the museum.</strong> It's his most complex and layered single work in Valencia.
+    </p>
+    <div class="tip"><span class="tip-icon">🪑</span><span class="tip-text">Sit on the park benches opposite. Read left to right. The unicorn and anti-drug inscription are on the right section. Roman busts are centre-left. Give it 10 minutes — it keeps revealing itself.</span></div>
+  </div>
+</article>
+
+<div class="walk-dir">
+  <span class="dir-arrow">→</span>
+  <div class="dir-text">Walk north on <strong>Carrer de Guillem de Castro</strong> past the IVAM entrance. Turn right onto <strong>Carrer de Na Jordana</strong>. Head toward <strong>Plaza Mossén Sorell</strong>.</div>
+  <div class="dir-dist">300m</div>
+</div>
+
+
+<!-- MURAL 07 — DEIH: MUMMIFIED SPACEMAN -->
+<article class="mural">
+  <div class="mural-bar c-purple"></div>
+  <div class="mural-header">
+    <div class="mural-num">07</div>
+    <div class="mural-info">
+      <div class="mural-tag">Block near Plaza Mossén Sorell · El Carmen</div>
+      <div class="mural-title">Mummified Spaceman</div>
+      <div class="mural-artist">Deih · Valencian · XLF Crew</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=Plaza+Mossen+Sorell+Valencia" target="_blank"><span class="loc-dot"></span>Wall on the block around Plaza Mossén Sorell · El Carmen</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration" style="background:linear-gradient(180deg,#1a0a2a 0%,#0a0a1a 100%)"><div class="ill-icon">👾</div><div class="ill-label">Mummified Spaceman · Deih · Near Plaza Mossén Sorell</div></div>
+    <div class="mural-caption">Wall near Plaza Mossén Sorell — Julieta XLF has a companion piece on the same block</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">XLF Crew · El Carmen · Near Plaza Mossén Sorell</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>A large figure that reads as simultaneously mummified and space-suited — wrapped in bandages or a suit, the body is deliberately ambiguous between ancient and futuristic. Geometric forms, flat colours, bold comic-book outlines. The figure occupies the wall with authority but no aggression.</p>
+    </div>
+    <p class="mural-meaning">
+      <strong>Deih</strong> (XLF crew) builds a visual language that merges sci-fi, hip-hop, and medieval iconography. His figures are alien to their environment — <em>literally alien, but also socially displaced</em>. He grew up painting Valencia and remains one of its most internationally exhibited urban artists. A Julieta XLF piece is documented on the same block — the two paint in close proximity as part of the same crew.
+    </p>
+    <div class="tip"><span class="tip-icon">👀</span><span class="tip-text">Also look at Plaza Mossén Sorell's children's playground — surfaces painted with cartoon characters. It documents how murals permeate every surface in this barrio, not just the prestige walls.</span></div>
+  </div>
+</article>
+
+<div class="walk-dir">
+  <span class="dir-arrow">→</span>
+  <div class="dir-text">Continue east then south on <strong>Carrer del Museu</strong>, passing the Casa de los Gatos (Calle Museo 9), to <strong>Plaza del Carmen</strong>.</div>
+  <div class="dir-dist">280m</div>
+</div>
+
+
+<!-- MURAL 08 — CABISCOL: CIMA BUILDING -->
+<article class="mural">
+  <div class="mural-bar c-green"></div>
+  <div class="mural-header">
+    <div class="mural-num">08</div>
+    <div class="mural-info">
+      <div class="mural-tag">Plaza del Carmen · CIMA Building — three painted sides</div>
+      <div class="mural-title">Valencia Panorama</div>
+      <div class="mural-artist">Cabiscol · Valencian local painter</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=Plaza+del+Carmen+Valencia" target="_blank"><span class="loc-dot"></span>CIMA building, corner of Calle Moret and Plaza del Carmen — walk all three sides</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration" style="background:linear-gradient(180deg,#0a1a0a 0%,#0a0a0a 100%)"><div class="ill-icon">🏙️</div><div class="ill-label">Valencia Panorama · Cabiscol · Plaza del Carmen</div></div>
+    <div class="mural-caption">All three exterior walls of the CIMA building wrap around with panoramic painted Valencia scenes</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">Plaza del Carmen · Three-sided building · Cabiscol</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>The headquarters of CIMA — an association for older Valencian residents — has <strong>all three exterior walls painted</strong> by local artist Cabiscol. The murals are panoramic: Valencia's towers, bridges, countryside, animals, and city life wrap around the building like a painted postcard. Each side is a chapter of the same landscape.</p>
+    </div>
+    <p class="mural-meaning">
+      <strong>Cabiscol</strong> brings a different register to El Carmen — less political, more celebratory. The subject is Valencia as its residents see it and love it. <em>This is a building for older citizens, painted with the visual identity of their city.</em> It sits in contrast to the confrontational works nearby, and is more affecting for that difference.
+    </p>
+    <div class="tip"><span class="tip-icon">🔄</span><span class="tip-text">Walk the complete perimeter of the building before moving on — the three sides read as one continuous composition. The corner where Calle Moret meets the plaza is where it begins.</span></div>
+  </div>
+</article>
+
+<div class="walk-dir">
+  <span class="dir-arrow">→</span>
+  <div class="dir-text">From Plaza del Carmen, enter <strong>Carrer de Moret</strong> (nicknamed Calle de los Colores). Walk its full length from north to south.</div>
+  <div class="dir-dist">100m</div>
+</div>
+
+
+<!-- MURAL 09 — CALLE DE LOS COLORES + KISS ME VLC -->
+<article class="mural">
+  <div class="mural-bar c-yellow"></div>
+  <div class="mural-header">
+    <div class="mural-num">09</div>
+    <div class="mural-info">
+      <div class="mural-tag">Carrer de Moret — "Calle de los Colores"</div>
+      <div class="mural-title">The Street of Colours</div>
+      <div class="mural-artist">Multiple artists · #KissmeVLC kissing couple</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=Calle+Moret+Valencia+El+Carmen" target="_blank"><span class="loc-dot"></span>Carrer de Moret (Calle Moret), El Carmen — full length of the pedestrian street</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration" style="background:linear-gradient(135deg,#2a1a3a 0%,#1a2a3a 50%,#1a3a1a 100%)"><div class="ill-icon">💑</div><div class="ill-label">Street of Colours · Multiple artists · Calle Moret</div></div>
+    <div class="mural-caption">Carrer de Moret — every wall, shutter, drainpipe, and door is painted by different hands</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">Ongoing · Multiple years · Nicknamed Calle de los Colores</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>An entire short pedestrian lane where every surface — walls, shutters, window surrounds, drainpipes, utility boxes — has been painted by different artists at different times. The signature centrepiece is a large mural of <strong>a kissing couple</strong>. The image was taken from a photo captured at London Bridge Station on 14 August 2012. Using the hashtag <em>#kissmevlc</em>, the city tried to identify the couple. They were never found. They are still on the wall.</p>
+    </div>
+    <p class="mural-meaning">
+      This street is the cumulative effect rather than any single named work. But the kissing couple is its anchor: <em>a real anonymous moment of intimacy, captured by a stranger, painted onto a wall in another country, claimed as a Valencian act.</em> The neighbourhood adopted them without knowing who they were.
+    </p>
+    <div class="tip"><span class="tip-icon">🕗</span><span class="tip-text">Morning is best here — the street is narrow and shaded. When shops are closed, the painted shutters add more surface than when they are open. Come back at night to see how the light changes everything.</span></div>
+  </div>
+</article>
+
+<div class="walk-dir">
+  <span class="dir-arrow">→</span>
+  <div class="dir-text">Head north on <strong>Carrer Roteros</strong> toward Torres de Serranos. This is the final leg — last mural-dense street of the route.</div>
+  <div class="dir-dist">400m</div>
+</div>
+
+
+<!-- MURAL 10 — DAVID DE LIMÓN -->
+<article class="mural">
+  <div class="mural-bar c-red"></div>
+  <div class="mural-header">
+    <div class="mural-num">10</div>
+    <div class="mural-info">
+      <div class="mural-tag">Carrer Roteros + all over El Carmen</div>
+      <div class="mural-title">The Masked Figure</div>
+      <div class="mural-artist">David de Limón · Valencian</div>
+    </div>
+  </div>
+  <a class="mural-loc" href="https://maps.google.com/?q=Calle+Roteros+Valencia+El+Carmen" target="_blank"><span class="loc-dot"></span>Carrer Roteros — and everywhere in El Carmen, look high and low</a>
+  <div class="mural-image-wrap">
+    <div class="mural-illustration" style="background:linear-gradient(180deg,#0a0a0a 0%,#1a0a0a 100%)"><div class="ill-icon">🥷</div><div class="ill-label">The Masked Figure · David de Limón · All of El Carmen</div></div>
+    <div class="mural-caption">David de Limón's figures appear at all scales — hand-sized in corners, multi-storey on building faces</div>
+  </div>
+  <div class="mural-body">
+    <div class="year-badge">Ongoing · Ubiquitous across all El Carmen</div>
+    <div class="what-you-see">
+      <strong>&#9654; What you are looking at</strong>
+      <p>A black-and-white masked figure — often described by viewers as a ninja or a karate fighter. <strong>Always carrying a red heart-shaped symbol on its chest.</strong> Always monochrome. It appears at wildly different scales: tiny, tucked above a doorway; or multiple metres tall on a full building face. Once you spot one, you see them everywhere.</p>
+    </div>
+    <p class="mural-meaning">
+      <strong>David de Limón</strong> is Valencia's most pervasive street presence. In an interview, he clarified: <em>it is not a ninja — it is a masked character dedicated to painting the city.</em> The mask is anonymity. The heart is affection. The ubiquity is the entire point — the figure haunts El Carmen like a benevolent ghost, appearing on bins, above exits, on private doors, in narrow alleys nobody photographed before.
+    </p>
+    <div class="tip"><span class="tip-icon">🎮</span><span class="tip-text">Count them across the full route — they appear from Stop 1 onward. Average across the full walk: 8 to 12 sightings. The smallest ones reward the most attention.</span></div>
+  </div>
+</article>
+
+
+<!-- ARTISTS REFERENCE -->
+<section class="artists">
+  <h2>The Artists</h2>
+  <p class="artists-sub">The six artists whose named works anchor this tour — all either Valencian-born or adopted the city as home.</p>
+
+  <div class="artist"><div class="artist-stripe c-red"></div><div class="artist-content"><div class="a-name">Blu</div><div class="a-origin">Italian · International</div><p class="a-bio">One of the world's most significant muralists. His Moses at Plaza del Tossal (2011) is his most famous work in Spain. Consistently political: money, power, and institutional religion are his targets. Rarely grants interviews. Works globally.</p></div></div>
+
+  <div class="artist"><div class="artist-stripe c-grey"></div><div class="artist-content"><div class="a-name">Escif</div><div class="a-origin">Valencia, Spain · Anonymous</div><p class="a-bio">The most celebrated urban artist to come out of Valencia. Anonymous. Uses flat colour and minimal line to deliver deadpan social commentary. Commissioned to paint the entire rear wall of the IVAM — one of the most significant institutional recognitions of street art in Spain.</p></div></div>
+
+  <div class="artist"><div class="artist-stripe" style="background:#888"></div><div class="artist-content"><div class="a-name">Hyuro</div><div class="a-origin">Argentina, based Valencia · 1974–2020</div><p class="a-bio">Tamara Djurovic. Moved from Argentina to Valencia for her studies and stayed. Monochromatic figurative work: faceless women in oversized dimensions addressing gender violence and city life. Passed away in 2020. Her murals remain across El Carmen.</p></div></div>
+
+  <div class="artist"><div class="artist-stripe c-yellow"></div><div class="artist-content"><div class="a-name">Julieta XLF</div><div class="a-origin">Spain · XLF Collective</div><p class="a-bio">Most prolific female muralist in Valencia. Elongated female figures in muted botanical palettes. Part of the XLF crew with Deih. Has documented works on Calle Moro Zaid, Calle Baja, Calle de la Beneficència, Calle Ripalda, Calle Doctor Chiarri, and Calle Roteros.</p></div></div>
+
+  <div class="artist"><div class="artist-stripe c-purple"></div><div class="artist-content"><div class="a-name">Deih</div><div class="a-origin">Valencia, Spain · XLF Collective</div><p class="a-bio">Comic-book influenced forms fusing sci-fi, hip-hop, and medieval iconography. Internationally exhibited. Often paints in close proximity with Julieta XLF. His figures are deliberately alien to their surroundings — displaced presences on familiar walls.</p></div></div>
+
+  <div class="artist"><div class="artist-stripe c-red"></div><div class="artist-content"><div class="a-name">David de Limón</div><div class="a-origin">Valencia, Spain</div><p class="a-bio">Creator of the masked, red-hearted character that appears across every surface in El Carmen. Described the figure himself as a masked person "dedicated to painting" the city — not a ninja. The red heart is always present. Finding all the hidden figures is its own reward.</p></div></div>
+</section>
+
+
+<!-- PRACTICAL -->
+<section class="practical">
+  <h2>Practical</h2>
+  <dl class="prac-grid">
+    <div class="prac-item"><dt>Start Point</dt><dd>Plaza del Tossal. Metro: Àngel Guimerà (L1/L5) + 8 min walk north.</dd></div>
+    <div class="prac-item"><dt>Best Light</dt><dd>08:00–10:00 for empty streets and low angle. 17:00–19:00 for warm tones on plaster.</dd></div>
+    <div class="prac-item"><dt>Duration</dt><dd>1.5 hrs walking. Allow 2.5 hrs if shooting seriously at every stop.</dd></div>
+    <div class="prac-item"><dt>Cost</dt><dd>Free. No admission. No reservation. The street is the gallery.</dd></div>
+    <div class="prac-item"><dt>Key Rule</dt><dd>Always check around every corner. The best pieces in El Carmen are never on the obvious wall.</dd></div>
+    <div class="prac-item"><dt>Murals Change</dt><dd>Major works (Blu, Escif) have stood for years. Smaller pieces come and go overnight. Expect change.</dd></div>
+  </dl>
+</section>
+
+<footer>
+  <strong>El Carmen · Wall Paintings</strong><br>
+  Barrio del Carmen · Ciudad Vieja · Valencia, Spain<br>
+  Research compiled April 2026 · Murals subject to change<br>
+  &#9679; Walking guide for personal use
+</footer>
+
+<script>
+  window.addEventListener('scroll',()=>{
+    const d=document.documentElement;
+    document.getElementById('prog').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%';
+  },{passive:true});
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.06});
+  document.querySelectorAll('.mural,.walk-dir').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
